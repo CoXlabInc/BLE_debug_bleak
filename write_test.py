@@ -5,7 +5,7 @@ from bleak import BleakScanner
 from bleak import BleakClient
 
 async def find_by_name(name: str):
-    global found, mac_addr
+    global mac_addr
     devices = await BleakScanner.discover()
     print("Found %d devices!" % len(devices))
     for d in devices:
@@ -17,8 +17,10 @@ async def find_by_name(name: str):
 async def print_services(mac_addr: str, service_uuid: str, characteristic_uuid: str, value: str, need_response: bool, loop: asyncio.AbstractEventLoop):
     service_flag = 0
     char_flag = 0
+    connect_flag = 0
     try:
         async with BleakClient(mac_addr, loop=loop, timeout=5.0) as client:
+            connect_flag = 1
             svcs = client.services
             for service in svcs:
                 if (service.uuid == service_uuid):
